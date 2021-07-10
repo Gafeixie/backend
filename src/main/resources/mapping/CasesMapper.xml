@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CasesMapper">
+    <insert id="newCreateCases" parameterType="com.example.model.Cases">
+        insert into cases(Case_id,Case_name,Case_type_id,Case_description,importace,Staff_id,Department_ids,Block_Hash,create_date,update_date) values(#{caseId},#{caseName},#{caseTypeId},#{caseDescription},#{importace},#{staffId},#{departmentIds},#{blockHash},#{createDate},#{updateDate});
+    </insert>
+    <update id="newUpdateCase" parameterType="com.example.model.Cases">
+            update cases
+            <set >
+                <choose>
+                <when test="caseName!=null and caseTypeId==null and caseDescription==null">
+
+                        Case_name = #{caseName}
+
+                </when>
+                <otherwise>
+                    <if test="caseName!=null">
+                        Case_name = #{caseName},
+                    </if >
+                </otherwise>
+                </choose>
+                <choose>
+                    <when test="caseName==null and caseTypeId!=null and caseDescription==null">
+                        <if test="caseTypeId != null">
+                            Case_type_id = #{caseTypeId}
+                        </if>
+                    </when>
+                    <otherwise>
+                        <if test="caseTypeId!=null ">
+                            Case_type_id = #{caseTypeId},
+                        </if >
+                    </otherwise>
+                </choose>
+                        <if test="caseDescription!=null ">
+                            Case_description = #{caseDescription}
+                        </if >
+
+            </set>
+            where Case_id = #{caseId}
+    </update>
+    <select id="findCase" resultType="com.example.model.Cases">
+select * from cases
+</select>
+    <select id="findCaseByContdition" parameterType="com.example.model.Cases" resultType="com.example.model.Cases">
+          select * from cases where
+            <if test="caseId!=null">
+                Case_id=#{caseId}
+            </if >
+        <choose>
+            <when test="caseId!=null">
+                <if test="caseName!=null">
+                  and  Case_name=#{caseName}
+                </if >
+            </when>
+            <otherwise>
+                <if test="caseName!=null">
+                    Case_name=#{caseName}
+                </if >
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="caseId!=null or caseName!=null">
+                <if test="caseTypeId !=null ">
+                    and Case_type_id=#{caseTypeId}
+                </if >
+            </when>
+            <otherwise>
+                <if test="caseTypeId !=null ">
+                    Case_type_id=#{caseTypeId}
+                </if >
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="caseId!=null or caseName!=null or caseTypeId!=null">
+                <if test="caseDescription!=null">
+                    and Case_description like concat('%',#{caseDescription},'%')
+                </if >
+            </when>
+            <otherwise>
+                <if test="caseDescription!=null">
+                    Case_description like concat('%',#{caseDescription},'%')
+                </if >
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="caseId!=null or caseName!=null or caseTypeId!=null or caseDescription!=null">
+                <if test="createDate!=null">
+                    and create_date >= #{createDate}
+                </if >
+            </when>
+            <otherwise>
+                <if test="createDate!=null">
+                    create_date >= #{createDate}
+                </if >
+            </otherwise>
+        </choose>
+
+
+
+    </select>
+    <select id="queryCaseById" resultType="com.example.model.Cases">select  from cases where caseId=#{caseId};</select>
+</mapper>

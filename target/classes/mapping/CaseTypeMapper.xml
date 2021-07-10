@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CaseTypeMapper">
+
+
+    <select id="findCaseByType" resultType="com.example.model.vo.ReturnCase">
+        select case_id,case_name,Case_type_id,Case_description,importace,Staff_id,from_department
+        from cases where Department_ids like #{departmentId}
+        <if test="note != null">
+            AND Case_description like #{note}
+        </if>
+        <if test="importances != null">
+            AND importace=#{importances}
+        </if>
+        <if test="staffId != null">
+            AND staffId = #{staffId}
+        </if>
+        <if test="type != null">
+            AND Case_type_id = #{type}
+        </if>
+
+    </select>
+    <select id="find" resultType="com.example.model.vo.ReturnCase">
+        select case_id,case_name,Case_type_id,Case_description,importace,Staff_id,from_department
+        from cases where Department_ids like #{departmentId}
+
+    </select>
+
+</mapper>
