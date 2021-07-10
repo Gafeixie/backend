@@ -36,7 +36,6 @@ public class ExamineServiceImpl implements ExamineService {
         map.put("102","检察院");
         map.put("103","法院");
         map.put("104","司法局");
-
         String key ;
         try {
            String passDepart= examineMapper.findPassDepart(evidenceId);
